@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Selector from "../components/Selector";
+import Input from "../components/Input";
 
 export default function SetupView() {
     const [project, setProject] = useState('');
@@ -10,9 +11,19 @@ export default function SetupView() {
     const [packaging, setPackaging] = useState('');
     const [javaVersion, setJavaVersion] = useState('');
 
+    const [group, setGroup] = useState('');
+    const [artifat, setArtifat] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [packageName, setPackageName] = useState('');
+
+    useEffect(() => {
+        setPackageName(group+"."+name);
+    }, [group, name])
+
     return (
-        <div className="w-screen h-screen flex justify-center m-4">
-            <div className="max-w-[1000px] mt-[65px] flex flex-col gap-[48px]">
+        <div className="w-screen h-screen flex justify-center m-4 mt-[40px]">
+            <div className="max-w-[1000px] flex flex-col gap-[48px]">
                 <header className="flex flex-col">
                     <a className="font-bold text-[30px]">Configuração Inicial</a>
                     <a className="text-[16px]">Selecione as principais configurações do projeto</a>
@@ -51,10 +62,22 @@ export default function SetupView() {
                         clickedItem={bootVersion}
                         setClickedItem={setBootVersion}
                     />
+
+                    <div className="w-[100%] flex flex-col gap-[16px]">
+                        <a className="font-bold text-[20px]">Metadata do Projeto</a>
+                        
+                        <div className="flex flex-col gap-[24px]">
+                            <Input name="Grupo" placeHolder="com.exemplo" value={group} changeValue={setGroup}/>
+                            <Input name="Nome do Artefato" placeHolder="demo" value={artifat} changeValue={setArtifat}/>
+                            <Input name="Nome" placeHolder="demo" value={name} changeValue={setName}/>
+                            <Input name="Descrição" placeHolder="Descrição do projeto." value={description} changeValue={setDescription}/>
+                            <Input name="Nome do Pacote" placeHolder="com.example.demo" value={packageName} changeValue={(setPackageName)}/>
+                        </div>
+                    </div>
                     
-                    <div className="flex gap-[150px]">
+                    <div className="flex gap-[150px] flex-wrap mb-[40px]">
                         <Selector
-                            name="Packaging"
+                            name="Empacotamento"
                             items={[
                                 ["Jar", "JAR"],
                                 ["War", "WAR"],
