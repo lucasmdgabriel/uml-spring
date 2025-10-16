@@ -1,36 +1,19 @@
-"use client"
-
-import { useEffect, useState } from "react";
 import Selector from "../components/Selector";
 import Input from "../components/Input";
+import { ProjectConfigProps } from "../page";
 
-export default function SetupView() {
-    const [form, setForm] = useState({
-        project: 'MAVEN_PROJECT',
-        language: 'JAVA',
-        bootVersion: '4.0.0.BUILD-SNAPSHOT',
-        packaging: 'JAR',
-        javaVersion: '21',
-        group: '',
-        artifat: '',
-        name: '',
-        description: '',
-        packageName: ''
-    })
+interface SetupProps {
+    projConfig: ProjectConfigProps,
+    updateProjConfig: (newProjConfig: ProjectConfigProps) => void
+}
 
-    useEffect(() => {
-        setForm({
-            ... form,
-            packageName: form.group+"."+form.name
-        });
-    }, [form.group, form.name])
-
+export default function SetupView(props: SetupProps) {
     return (
         <div className="w-screen h-screen flex justify-center m-4 mt-[40px]">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
                 <header className="flex flex-col">
                     <a className="font-bold text-[30px]">Configuração Inicial</a>
-                    <a onClick={() => {console.log(form);}} className="text-[16px]">Selecione as principais configurações do projeto</a>
+                    <a onClick={() => {console.log(props.projConfig);}} className="text-[16px]">Selecione as principais configurações do projeto</a>
                 </header>
                 <main className="flex flex-col gap-[40px]">
                     <Selector
@@ -40,10 +23,10 @@ export default function SetupView() {
                             ["Gradle - Groovy", "GRADLE-PROJECT"],
                             ["Gradle - Kotlin", "GRADLE-PROJECT-KOTLIN"]
                         ]}
-                        clickedItem={form.project}
+                        clickedItem={props.projConfig.project}
                         setClickedItem={(newValue: string) => {
-                            setForm({
-                                ... form,
+                            props.updateProjConfig({
+                                ... props.projConfig,
                                 project: newValue
                             })
                         }}
@@ -54,10 +37,10 @@ export default function SetupView() {
                         items={[
                             ["Java", "JAVA"]
                         ]}
-                        clickedItem={form.language}
+                        clickedItem={props.projConfig.language}
                         setClickedItem={(newValue: string) => {
-                            setForm({
-                                ... form,
+                            props.updateProjConfig({
+                                ... props.projConfig,
                                 language: newValue
                             })
                         }}
@@ -73,10 +56,10 @@ export default function SetupView() {
                             ["3.4.11 (SNAPSHOT)", "3.4.11.BUILD-SNAPSHOT"],
                             ["3.4.10", "3.4.10.RELEASE"],
                         ]}
-                        clickedItem={form.bootVersion}
+                        clickedItem={props.projConfig.bootVersion}
                         setClickedItem={(newValue: string) => {
-                            setForm({
-                                ... form,
+                            props.updateProjConfig({
+                                ... props.projConfig,
                                 bootVersion: newValue
                             })
                         }}
@@ -87,44 +70,44 @@ export default function SetupView() {
                         
                         <div className="flex flex-col gap-[24px]">
                             <Input name="Grupo" placeHolder="com.exemplo"
-                                value={form.group}
+                                value={props.projConfig.group}
                                 changeValue={(newValue: string) => {
-                                    setForm({... form, 
+                                    props.updateProjConfig({... props.projConfig, 
                                         group: newValue
                                     });
                                 }}
                             />
                             <Input name="Nome do Artefato" placeHolder="demo"
-                                value={form.artifat}
+                                value={props.projConfig.artifat}
                                 changeValue={(newValue: string) => {
-                                    setForm({... form, 
+                                    props.updateProjConfig({... props.projConfig, 
                                         artifat: newValue
                                     });
                                 }}
                             />
                             <Input
                                 name="Nome" placeHolder="demo"
-                                value={form.name}
+                                value={props.projConfig.name}
                                 changeValue={(newValue: string) => {
-                                    setForm({... form, 
+                                    props.updateProjConfig({... props.projConfig, 
                                         name: newValue
                                     });
                                 }}
                             />
                             <Input
                                 name="Descrição" placeHolder="Descrição do projeto."
-                                value={form.description}
+                                value={props.projConfig.description}
                                 changeValue={(newValue: string) => {
-                                    setForm({... form, 
+                                    props.updateProjConfig({... props.projConfig, 
                                         description: newValue
                                     });
                                 }}
                             />
                             <Input
                                 name="Nome do Pacote" placeHolder="com.example.demo"
-                                value={form.packageName}
+                                value={props.projConfig.packageName}
                                 changeValue={(newValue: string) => {
-                                    setForm({... form, 
+                                    props.updateProjConfig({... props.projConfig, 
                                         packageName: newValue
                                     });
                                 }}
@@ -139,10 +122,10 @@ export default function SetupView() {
                                 ["Jar", "JAR"],
                                 ["War", "WAR"],
                             ]}
-                            clickedItem={form.packaging}
+                            clickedItem={props.projConfig.packaging}
                             setClickedItem={(newValue: string) => {
-                                setForm({
-                                    ... form,
+                                props.updateProjConfig({
+                                    ... props.projConfig,
                                     packaging: newValue
                                 })
                             }}
@@ -156,10 +139,10 @@ export default function SetupView() {
                                 ["17", "17"],
                                 ["25", "25"],
                             ]}
-                            clickedItem={form.javaVersion}
+                            clickedItem={props.projConfig.javaVersion}
                             setClickedItem={(newValue: string) => {
-                                setForm({
-                                    ... form,
+                                props.updateProjConfig({
+                                    ... props.projConfig,
                                     javaVersion: newValue
                                 })
                             }}
