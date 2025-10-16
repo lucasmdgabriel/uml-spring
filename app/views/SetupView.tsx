@@ -5,28 +5,32 @@ import Selector from "../components/Selector";
 import Input from "../components/Input";
 
 export default function SetupView() {
-    const [project, setProject] = useState('');
-    const [language, setLanguage] = useState('');
-    const [bootVersion, setBootVersion] = useState('');
-    const [packaging, setPackaging] = useState('');
-    const [javaVersion, setJavaVersion] = useState('');
-
-    const [group, setGroup] = useState('');
-    const [artifat, setArtifat] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [packageName, setPackageName] = useState('');
+    const [form, setForm] = useState({
+        project: 'MAVEN_PROJECT',
+        language: 'JAVA',
+        bootVersion: '4.0.0.BUILD-SNAPSHOT',
+        packaging: 'JAR',
+        javaVersion: '21',
+        group: '',
+        artifat: '',
+        name: '',
+        description: '',
+        packageName: ''
+    })
 
     useEffect(() => {
-        setPackageName(group+"."+name);
-    }, [group, name])
+        setForm({
+            ... form,
+            packageName: form.group+"."+form.name
+        });
+    }, [form.group, form.name])
 
     return (
         <div className="w-screen h-screen flex justify-center m-4 mt-[40px]">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
                 <header className="flex flex-col">
                     <a className="font-bold text-[30px]">Configuração Inicial</a>
-                    <a className="text-[16px]">Selecione as principais configurações do projeto</a>
+                    <a onClick={() => {console.log(form);}} className="text-[16px]">Selecione as principais configurações do projeto</a>
                 </header>
                 <main className="flex flex-col gap-[40px]">
                     <Selector
@@ -36,8 +40,13 @@ export default function SetupView() {
                             ["Gradle - Groovy", "GRADLE-PROJECT"],
                             ["Gradle - Kotlin", "GRADLE-PROJECT-KOTLIN"]
                         ]}
-                        clickedItem={project}
-                        setClickedItem={setProject}
+                        clickedItem={form.project}
+                        setClickedItem={(newValue: string) => {
+                            setForm({
+                                ... form,
+                                project: newValue
+                            })
+                        }}
                     />
 
                     <Selector
@@ -45,8 +54,13 @@ export default function SetupView() {
                         items={[
                             ["Java", "JAVA"]
                         ]}
-                        clickedItem={language}
-                        setClickedItem={setLanguage}
+                        clickedItem={form.language}
+                        setClickedItem={(newValue: string) => {
+                            setForm({
+                                ... form,
+                                language: newValue
+                            })
+                        }}
                     />
 
                     <Selector
@@ -59,19 +73,62 @@ export default function SetupView() {
                             ["3.4.11 (SNAPSHOT)", "3.4.11.BUILD-SNAPSHOT"],
                             ["3.4.10", "3.4.10.RELEASE"],
                         ]}
-                        clickedItem={bootVersion}
-                        setClickedItem={setBootVersion}
+                        clickedItem={form.bootVersion}
+                        setClickedItem={(newValue: string) => {
+                            setForm({
+                                ... form,
+                                bootVersion: newValue
+                            })
+                        }}
                     />
 
                     <div className="w-[100%] flex flex-col gap-[16px]">
                         <a className="font-bold text-[20px]">Metadata do Projeto</a>
                         
                         <div className="flex flex-col gap-[24px]">
-                            <Input name="Grupo" placeHolder="com.exemplo" value={group} changeValue={setGroup}/>
-                            <Input name="Nome do Artefato" placeHolder="demo" value={artifat} changeValue={setArtifat}/>
-                            <Input name="Nome" placeHolder="demo" value={name} changeValue={setName}/>
-                            <Input name="Descrição" placeHolder="Descrição do projeto." value={description} changeValue={setDescription}/>
-                            <Input name="Nome do Pacote" placeHolder="com.example.demo" value={packageName} changeValue={(setPackageName)}/>
+                            <Input name="Grupo" placeHolder="com.exemplo"
+                                value={form.group}
+                                changeValue={(newValue: string) => {
+                                    setForm({... form, 
+                                        group: newValue
+                                    });
+                                }}
+                            />
+                            <Input name="Nome do Artefato" placeHolder="demo"
+                                value={form.artifat}
+                                changeValue={(newValue: string) => {
+                                    setForm({... form, 
+                                        artifat: newValue
+                                    });
+                                }}
+                            />
+                            <Input
+                                name="Nome" placeHolder="demo"
+                                value={form.name}
+                                changeValue={(newValue: string) => {
+                                    setForm({... form, 
+                                        name: newValue
+                                    });
+                                }}
+                            />
+                            <Input
+                                name="Descrição" placeHolder="Descrição do projeto."
+                                value={form.description}
+                                changeValue={(newValue: string) => {
+                                    setForm({... form, 
+                                        description: newValue
+                                    });
+                                }}
+                            />
+                            <Input
+                                name="Nome do Pacote" placeHolder="com.example.demo"
+                                value={form.packageName}
+                                changeValue={(newValue: string) => {
+                                    setForm({... form, 
+                                        packageName: newValue
+                                    });
+                                }}
+                            />
                         </div>
                     </div>
                     
@@ -82,8 +139,13 @@ export default function SetupView() {
                                 ["Jar", "JAR"],
                                 ["War", "WAR"],
                             ]}
-                            clickedItem={packaging}
-                            setClickedItem={setPackaging}
+                            clickedItem={form.packaging}
+                            setClickedItem={(newValue: string) => {
+                                setForm({
+                                    ... form,
+                                    packaging: newValue
+                                })
+                            }}
                         />
 
                         
@@ -94,8 +156,13 @@ export default function SetupView() {
                                 ["17", "17"],
                                 ["25", "25"],
                             ]}
-                            clickedItem={javaVersion}
-                            setClickedItem={setJavaVersion}
+                            clickedItem={form.javaVersion}
+                            setClickedItem={(newValue: string) => {
+                                setForm({
+                                    ... form,
+                                    javaVersion: newValue
+                                })
+                            }}
                         />
 
                     </div>

@@ -11,9 +11,6 @@ interface SelectorProps {
 }
 
 export default function Selector(props: SelectorProps) {
-    useEffect(() => {
-        props.setClickedItem(props.items[0][1]);
-    }, []);
 
     return (
         <div className="flex flex-col gap-[16px]">
