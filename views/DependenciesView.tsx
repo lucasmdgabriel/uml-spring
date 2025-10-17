@@ -1,11 +1,14 @@
 "use client"
 
+import { projectGenerate } from "@/app/services/projectsService";
 import Button from "@/components/Button";
 import { useDependenciesContext } from "@/context/DependenciesContext";
+import { useProjectContext } from "@/context/ProjectConfigContext";
 import { useRouter } from "next/navigation";
 
 export default function DependenciesView() {
     const { dependencies, setDependencies } = useDependenciesContext();
+    const { projectConfig, setProjectConfig } = useProjectContext();
     const router = useRouter();
 
     function changeDependencyClicked (i: number, j: number) {
@@ -87,7 +90,9 @@ export default function DependenciesView() {
                             color="#FFFF"
                             bg="#2563EB"
                             borderColor="#2563EB"
-                            onClick={() => {}}                        
+                            onClick={() => {
+                                projectGenerate(projectConfig, dependencies);
+                            }}                        
                         />
                     </div>
                 </footer>
