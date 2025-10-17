@@ -1,19 +1,69 @@
 import Selector from "../components/Selector";
 import Input from "../components/Input";
 import { ProjectConfigProps } from "../page";
+import Button from "../components/Button";
+import { useProjectContext } from "../context/ProjectConfigContext";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface SetupProps {
-    projConfig: ProjectConfigProps,
-    updateProjConfig: (newProjConfig: ProjectConfigProps) => void
-}
+export default function SetupView() {
+    const { projectConfig, setProjectConfig } = useProjectContext();
+    const router = useRouter();
 
-export default function SetupView(props: SetupProps) {
+    const [errorForm, setErrorForm] = useState({
+        group: "",
+        artifat: "",
+        name: "",
+        description: "",
+        packageName: ""
+    });
+
+    function nextPage() {
+        let goToNextPage = true;
+
+        let newErrorForm = { ... errorForm };
+
+        if (!projectConfig.group) {
+            newErrorForm.group = "Grupo não pode ser vazio."
+            goToNextPage = false;
+        }
+
+        if (!projectConfig.artifat) {
+            newErrorForm.artifat = "Nome do artefato não pode ser vazio."
+            goToNextPage = false;
+        }
+
+        if (!projectConfig.name) {
+            newErrorForm.name = "Nome do projeto não pode ser vazio."
+            goToNextPage = false;
+        }
+
+        if (!projectConfig.description) {
+            newErrorForm.description = "Descrição do projeto não pode ser vazia."
+            goToNextPage = false;
+        }
+
+        if (!projectConfig.packageName) {
+            newErrorForm.packageName = "Nome do pacote não pode ser vazio."
+            goToNextPage = false;
+        }
+
+        if (!goToNextPage) {
+            alert("aqui");
+            setErrorForm(newErrorForm);
+            return;
+
+        }
+
+        router.push('/dependencies');
+    }
+    
     return (
         <div className="w-screen h-screen flex justify-center m-4 mt-[40px]">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
                 <header className="flex flex-col">
                     <a className="font-bold text-[30px]">Configuração Inicial</a>
-                    <a onClick={() => {console.log(props.projConfig);}} className="text-[16px]">Selecione as principais configurações do projeto</a>
+                    <a className="text-[16px]">Selecione as principais configurações do projeto</a>
                 </header>
                 <main className="flex flex-col gap-[40px]">
                     <Selector
@@ -23,10 +73,10 @@ export default function SetupView(props: SetupProps) {
                             ["Gradle - Groovy", "GRADLE-PROJECT"],
                             ["Gradle - Kotlin", "GRADLE-PROJECT-KOTLIN"]
                         ]}
-                        clickedItem={props.projConfig.project}
+                        clickedItem={projectConfig.project}
                         setClickedItem={(newValue: string) => {
-                            props.updateProjConfig({
-                                ... props.projConfig,
+                            setProjectConfig({
+                                ... projectConfig,
                                 project: newValue
                             })
                         }}
@@ -37,10 +87,10 @@ export default function SetupView(props: SetupProps) {
                         items={[
                             ["Java", "JAVA"]
                         ]}
-                        clickedItem={props.projConfig.language}
+                        clickedItem={projectConfig.language}
                         setClickedItem={(newValue: string) => {
-                            props.updateProjConfig({
-                                ... props.projConfig,
+                            setProjectConfig({
+                                ... projectConfig,
                                 language: newValue
                             })
                         }}
@@ -56,10 +106,10 @@ export default function SetupView(props: SetupProps) {
                             ["3.4.11 (SNAPSHOT)", "3.4.11.BUILD-SNAPSHOT"],
                             ["3.4.10", "3.4.10.RELEASE"],
                         ]}
-                        clickedItem={props.projConfig.bootVersion}
+                        clickedItem={projectConfig.bootVersion}
                         setClickedItem={(newValue: string) => {
-                            props.updateProjConfig({
-                                ... props.projConfig,
+                            setProjectConfig({
+                                ... projectConfig,
                                 bootVersion: newValue
                             })
                         }}
@@ -70,62 +120,67 @@ export default function SetupView(props: SetupProps) {
                         
                         <div className="flex flex-col gap-[24px]">
                             <Input name="Grupo" placeHolder="com.exemplo"
-                                value={props.projConfig.group}
+                                value={projectConfig.group}
                                 changeValue={(newValue: string) => {
-                                    props.updateProjConfig({... props.projConfig, 
+                                    setProjectConfig({... projectConfig, 
                                         group: newValue
                                     });
                                 }}
+                                error={errorForm.group}
                             />
                             <Input name="Nome do Artefato" placeHolder="demo"
-                                value={props.projConfig.artifat}
+                                value={projectConfig.artifat}
                                 changeValue={(newValue: string) => {
-                                    props.updateProjConfig({... props.projConfig, 
+                                    setProjectConfig({... projectConfig, 
                                         artifat: newValue
                                     });
                                 }}
+                                error={errorForm.artifat}
                             />
                             <Input
                                 name="Nome" placeHolder="demo"
-                                value={props.projConfig.name}
+                                value={projectConfig.name}
                                 changeValue={(newValue: string) => {
-                                    props.updateProjConfig({... props.projConfig, 
+                                    setProjectConfig({... projectConfig, 
                                         name: newValue
                                     });
                                 }}
+                                error={errorForm.name}
                             />
                             <Input
                                 name="Descrição" placeHolder="Descrição do projeto."
-                                value={props.projConfig.description}
+                                value={projectConfig.description}
                                 changeValue={(newValue: string) => {
-                                    props.updateProjConfig({... props.projConfig, 
+                                    setProjectConfig({... projectConfig, 
                                         description: newValue
                                     });
                                 }}
+                                error={errorForm.description}
                             />
                             <Input
                                 name="Nome do Pacote" placeHolder="com.example.demo"
-                                value={props.projConfig.packageName}
+                                value={projectConfig.packageName}
                                 changeValue={(newValue: string) => {
-                                    props.updateProjConfig({... props.projConfig, 
+                                    setProjectConfig({... projectConfig, 
                                         packageName: newValue
                                     });
                                 }}
+                                error={errorForm.packageName}
                             />
                         </div>
                     </div>
                     
-                    <div className="flex gap-[150px] flex-wrap mb-[40px]">
+                    <div className="flex gap-[150px] flex-wrap">
                         <Selector
                             name="Empacotamento"
                             items={[
                                 ["Jar", "JAR"],
                                 ["War", "WAR"],
                             ]}
-                            clickedItem={props.projConfig.packaging}
+                            clickedItem={projectConfig.packaging}
                             setClickedItem={(newValue: string) => {
-                                props.updateProjConfig({
-                                    ... props.projConfig,
+                                setProjectConfig({
+                                    ... projectConfig,
                                     packaging: newValue
                                 })
                             }}
@@ -139,15 +194,25 @@ export default function SetupView(props: SetupProps) {
                                 ["17", "17"],
                                 ["25", "25"],
                             ]}
-                            clickedItem={props.projConfig.javaVersion}
+                            clickedItem={projectConfig.javaVersion}
                             setClickedItem={(newValue: string) => {
-                                props.updateProjConfig({
-                                    ... props.projConfig,
+                                setProjectConfig({
+                                    ... projectConfig,
                                     javaVersion: newValue
                                 })
                             }}
                         />
 
+                    </div>
+
+                    <div className="mb-[40px] flex justify-end">
+                        <Button
+                            name="Prosseguir"
+                            color="#FFFF"
+                            bg="#2563EB"
+                            borderColor="#2563EB"
+                            onClick={nextPage}                        
+                        />
                     </div>
                 </main>
             </div>
