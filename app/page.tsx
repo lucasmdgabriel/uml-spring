@@ -1,6 +1,6 @@
 "use client"
 
-import SetupView from "./views/SetupView";
+import SetupView from "../views/SetupView";
 import { useState } from "react";
 
 export interface ProjectConfigProps {

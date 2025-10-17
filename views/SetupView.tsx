@@ -1,6 +1,6 @@
 import Selector from "../components/Selector";
 import Input from "../components/Input";
-import { ProjectConfigProps } from "../page";
+import { ProjectConfigProps } from "../app/page";
 import Button from "../components/Button";
 import { useProjectContext } from "../context/ProjectConfigContext";
 import { useRouter } from "next/navigation";

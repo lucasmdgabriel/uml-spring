@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState } from "react";
-import { ProjectConfigProps } from "../page";
+import { ProjectConfigProps } from "../app/page";
 
 interface ProjectContextType {
     projectConfig: ProjectConfigProps;
