@@ -4,7 +4,7 @@ import { ProjectConfigProps } from "../page";
 import Button from "../components/Button";
 import { useProjectContext } from "../context/ProjectConfigContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SetupView() {
     const { projectConfig, setProjectConfig } = useProjectContext();
@@ -17,6 +17,16 @@ export default function SetupView() {
         description: "",
         packageName: ""
     });
+
+    useEffect(() => {
+        if (!projectConfig.group || !projectConfig.name) return;
+
+        setProjectConfig({
+            ... projectConfig,
+            packageName: projectConfig.group+"."+projectConfig.name
+        });
+
+    }, [projectConfig.group, projectConfig.name]);
 
     function nextPage() {
         let goToNextPage = true;
@@ -32,24 +42,35 @@ export default function SetupView() {
             newErrorForm.artifat = "Nome do artefato não pode ser vazio."
             goToNextPage = false;
         }
+        else {
+            newErrorForm.artifat = "";
+        }
 
         if (!projectConfig.name) {
             newErrorForm.name = "Nome do projeto não pode ser vazio."
             goToNextPage = false;
+        }
+        else {
+            newErrorForm.name = "";
         }
 
         if (!projectConfig.description) {
             newErrorForm.description = "Descrição do projeto não pode ser vazia."
             goToNextPage = false;
         }
+        else {
+            newErrorForm.description = "";
+        }
 
         if (!projectConfig.packageName) {
             newErrorForm.packageName = "Nome do pacote não pode ser vazio."
             goToNextPage = false;
         }
+        else {
+            newErrorForm.packageName = "";
+        }
 
         if (!goToNextPage) {
-            alert("aqui");
             setErrorForm(newErrorForm);
             return;
 
