@@ -113,8 +113,8 @@ export default function UMLFileView() {
 
   const handleProceed = () => {
     if (plantUmlData && !error) {
-      console.log("Prosseguindo para /project-config");
-      router.push("/project-config");
+      console.log("Prosseguindo para /database-config");
+      router.push("/database-config");
     } else {
       if (!error) {
         setError("Por favor, envie um arquivo válido primeiro.");

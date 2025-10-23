@@ -80,7 +80,7 @@ export default function SetupView() {
     }
     
     return (
-        <div className="w-screen h-screen flex justify-center m-4 mt-[40px]">
+        <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
                 <header className="flex flex-col">
                     <a className="font-bold text-[30px]">Configuração Inicial</a>
