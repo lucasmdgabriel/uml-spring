@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProjectConfigProvider } from "../context/ProjectConfigContext";
 import { DependenciesProvider } from "@/context/DependenciesContext";
+import { PlantUMLProvider } from "@/context/PlantUMLContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <ProjectConfigProvider>
           <DependenciesProvider>
-            {children}
+            <PlantUMLProvider>
+              {children}
+            </PlantUMLProvider>
           </DependenciesProvider>
         </ProjectConfigProvider>
       </body>
