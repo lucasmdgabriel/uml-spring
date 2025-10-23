@@ -91,7 +91,7 @@ export default function DependenciesView() {
                             bg="#2563EB"
                             borderColor="#2563EB"
                             onClick={() => {
-                                projectGenerate(projectConfig, dependencies);
+                                router.push("/diagram");
                             }}                        
                         />
                     </div>
