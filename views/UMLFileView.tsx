@@ -272,7 +272,18 @@ export default function UMLFileView() {
               <p className="text-red-500 text-sm font-medium">{error}</p>
             )}
 
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
+              <Button
+                name="Voltar"
+                color="#000"
+                bg="#FFFFFF"
+                borderColor="#D1D5DB"
+                borderRadius={0}
+                onClick={() => {
+                  router.push('/dependencies');
+                }}
+              />
+
               <Button
                 name={isLoading ? "Processando..." : "Prosseguir"}
                 color={"#FFFFFF"}
