@@ -16,13 +16,13 @@ export function projectGenerate(projectConfig: ProjectConfigProps, dependencies:
     }
 
     console.log({
-            type: projectConfig.project,
+            type: projectConfig.type,
             language: projectConfig.language,
             bootVersion: projectConfig.bootVersion,
             javaVersion: projectConfig.javaVersion,
             description: projectConfig.description,
             name: projectConfig.name,
-            groupId: projectConfig.group,
+            groupId: projectConfig.groupId,
             dependencies: dependenciesList,
         });
 
@@ -32,13 +32,13 @@ export function projectGenerate(projectConfig: ProjectConfigProps, dependencies:
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            type: projectConfig.project,
+            type: projectConfig.type,
             language: projectConfig.language,
             bootVersion: projectConfig.bootVersion,
             javaVersion: projectConfig.javaVersion,
             description: projectConfig.description,
             name: projectConfig.name,
-            groupId: projectConfig.group,
+            groupId: projectConfig.groupId,
             dependencies: dependenciesList,
         })
         
@@ -60,7 +60,7 @@ export function projectGenerate(projectConfig: ProjectConfigProps, dependencies:
         // tenta extrair nome do arquivo do header, senão usa um padrão
         const contentDisposition = response.headers.get("content-disposition");
         const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
-        a.download = filenameMatch ? filenameMatch[1] : projectConfig.artifat+".zip";
+        a.download = filenameMatch ? filenameMatch[1] : projectConfig.artifactId+".zip";
 
         document.body.appendChild(a);
         a.click();

@@ -4,13 +4,13 @@ import SetupView from "../views/SetupView";
 import { useState } from "react";
 
 export interface ProjectConfigProps {
-  project: string,
+  type: string,
   language: string,
   bootVersion: string,
   packaging: string,
   javaVersion: string,
-  group: string,
-  artifat: string,
+  groupId: string,
+  artifactId: string,
   name: string,
   description: string,
   packageName: string,

@@ -5,80 +5,132 @@ import Button from "../components/Button";
 import { useProjectContext } from "../context/ProjectConfigContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { metadataRequest } from "@/app/hooks/SetupHooks";
+
+type ErrorFormType = {
+    groupId: string;
+    artifactId: string;
+    name: string;
+    description: string;
+    packageName: string;
+};
 
 export default function SetupView() {
     const { projectConfig, setProjectConfig } = useProjectContext();
     const router = useRouter();
 
-    const [errorForm, setErrorForm] = useState({
-        group: "",
-        artifat: "",
+    const [errorForm, setErrorForm] = useState<ErrorFormType>({
+        groupId: "",
+        artifactId: "",
         name: "",
         description: "",
         packageName: ""
     });
 
     useEffect(() => {
-        if (!projectConfig.group || !projectConfig.name) return;
+        if (!projectConfig.groupId || !projectConfig.name) return;
 
         setProjectConfig({
             ... projectConfig,
-            packageName: projectConfig.group+"."+projectConfig.name
+            packageName: projectConfig.groupId+"."+projectConfig.name
         });
 
-    }, [projectConfig.group, projectConfig.name]);
+    }, [projectConfig.groupId, projectConfig.name]);
 
-    function nextPage() {
-        let goToNextPage = true;
+    function validateFront(
+        projectConfig: ProjectConfigProps,
+        setErrorForm: React.Dispatch<React.SetStateAction<ErrorFormType>>
+    ): boolean {
+        let isValid = true;
 
-        let newErrorForm = { ... errorForm };
+        const newErrorForm: ErrorFormType = {
+            groupId: "",
+            artifactId: "",
+            name: "",
+            description: "",
+            packageName: ""
+        };
 
-        if (!projectConfig.group) {
-            newErrorForm.group = "Grupo não pode ser vazio."
-            goToNextPage = false;
+        if (!projectConfig.groupId) {
+            newErrorForm.groupId = "Grupo não pode ser vazio.";
+            isValid = false;
         }
-
-        if (!projectConfig.artifat) {
-            newErrorForm.artifat = "Nome do artefato não pode ser vazio."
-            goToNextPage = false;
+        if (!projectConfig.artifactId) {
+            newErrorForm.artifactId = "Nome do artefato não pode ser vazio.";
+            isValid = false;
         }
-        else {
-            newErrorForm.artifat = "";
-        }
-
         if (!projectConfig.name) {
-            newErrorForm.name = "Nome do projeto não pode ser vazio."
-            goToNextPage = false;
+            newErrorForm.name = "Nome do projeto não pode ser vazio.";
+            isValid = false;
         }
-        else {
-            newErrorForm.name = "";
-        }
-
         if (!projectConfig.description) {
-            newErrorForm.description = "Descrição do projeto não pode ser vazia."
-            goToNextPage = false;
+            newErrorForm.description = "Descrição do projeto não pode ser vazia.";
+            isValid = false;
         }
-        else {
-            newErrorForm.description = "";
-        }
-
         if (!projectConfig.packageName) {
-            newErrorForm.packageName = "Nome do pacote não pode ser vazio."
-            goToNextPage = false;
-        }
-        else {
-            newErrorForm.packageName = "";
+            newErrorForm.packageName = "Nome do pacote não pode ser vazio.";
+            isValid = false;
         }
 
-        if (!goToNextPage) {
-            setErrorForm(newErrorForm);
-            return;
-
-        }
-
-        router.push('/dependencies');
+        setErrorForm(newErrorForm);
+        return isValid;
     }
-    
+
+    async function validateBackend(
+        projectConfig: ProjectConfigProps,
+        setErrorForm: React.Dispatch<React.SetStateAction<ErrorFormType>>
+    ): Promise<boolean> {
+        const errors = await metadataRequest(projectConfig);
+
+        if (!errors || errors.length === 0) return true;
+
+        const newErrorForm: ErrorFormType = {
+            groupId: "",
+            artifactId: "",
+            name: "",
+            description: "",
+            packageName: ""
+        };
+
+        errors.forEach(err => {
+            switch (err.field) {
+                case "groupId":
+                    newErrorForm.groupId = err.message;
+                    break;
+                case "artifactId":
+                    newErrorForm.artifactId = err.message;
+                    break;
+                case "name":
+                    newErrorForm.name = err.message;
+                    break;
+                case "description":
+                    newErrorForm.description = err.message;
+                    break;
+                case "packageName":
+                    newErrorForm.packageName = err.message;
+                    break;
+                case "global":
+                    console.log(err.message);
+                    break;
+            }
+        });
+
+        setErrorForm(newErrorForm);
+        return false;
+    }
+
+    const handleClickProcess = async () => {
+        // 1️⃣ Valida front
+        const frontValid = validateFront(projectConfig, setErrorForm);
+        if (!frontValid) return;
+
+        // 2️⃣ Valida backend
+        const backendValid = await validateBackend(projectConfig, setErrorForm);
+        if (!backendValid) return;
+
+        router.push("/dependencies");
+    };
+
     return (
         <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
@@ -94,11 +146,11 @@ export default function SetupView() {
                             ["Gradle - Groovy", "GRADLE-PROJECT"],
                             ["Gradle - Kotlin", "GRADLE-PROJECT-KOTLIN"]
                         ]}
-                        clickedItem={projectConfig.project}
+                        clickedItem={projectConfig.type}
                         setClickedItem={(newValue: string) => {
                             setProjectConfig({
                                 ... projectConfig,
-                                project: newValue
+                                type: newValue
                             })
                         }}
                     />
@@ -141,22 +193,22 @@ export default function SetupView() {
                         
                         <div className="flex flex-col gap-[24px]">
                             <Input name="Grupo" placeHolder="com.exemplo"
-                                value={projectConfig.group}
+                                value={projectConfig.groupId}
                                 changeValue={(newValue: string) => {
                                     setProjectConfig({... projectConfig, 
-                                        group: newValue
+                                        groupId: newValue
                                     });
                                 }}
-                                error={errorForm.group}
+                                error={errorForm.groupId}
                             />
                             <Input name="Nome do Artefato" placeHolder="demo"
-                                value={projectConfig.artifat}
+                                value={projectConfig.artifactId}
                                 changeValue={(newValue: string) => {
                                     setProjectConfig({... projectConfig, 
-                                        artifat: newValue
+                                        artifactId: newValue
                                     });
                                 }}
-                                error={errorForm.artifat}
+                                error={errorForm.artifactId}
                             />
                             <Input
                                 name="Nome" placeHolder="demo"
@@ -232,7 +284,7 @@ export default function SetupView() {
                             color="#FFFF"
                             bg="#2563EB"
                             borderColor="#2563EB"
-                            onClick={nextPage}                        
+                            onClick={() => handleClickProcess()}                        
                         />
                     </div>
                 </main>

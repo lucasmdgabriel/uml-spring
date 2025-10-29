@@ -12,13 +12,13 @@ const ProjectContext = createContext<ProjectContextType | null>(null);
 
 export function ProjectConfigProvider({ children }: { children: React.ReactNode }) {
     const [projectConfig, setProjectConfig] = useState<ProjectConfigProps>({
-        project: 'MAVEN_PROJECT',
+        type: 'MAVEN_PROJECT',
         language: 'JAVA',
         bootVersion: '4.0.0.BUILD-SNAPSHOT',
         packaging: 'JAR',
         javaVersion: '21',
-        group: '',
-        artifat: '',
+        groupId: '',
+        artifactId: '',
         name: '',
         description: '',
         packageName: ''
