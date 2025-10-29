@@ -50,7 +50,7 @@ export default function UMLFileView() {
         plantUml: fileContent,
       };
 
-      const url = `${databaseUrl}/api/v1/projects/entities-model`;
+      const url = `${databaseUrl}/api/v1/projects/check/uml-diagram`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -72,7 +72,8 @@ export default function UMLFileView() {
           setError("Nenhuma entidade foi detectada no arquivo enviado.");
         }
       } else {
-        throw new Error(data.message || response.statusText);
+        setPlantUmlData(null);
+        setError(data.message);
       }
     } catch (error: any) {
       console.error("Erro ao enviar arquivo:", error);
@@ -97,6 +98,7 @@ export default function UMLFileView() {
       } else {
         setError("Arquivo inválido. Por favor, envie um arquivo .puml, .plantuml ou .txt");
         setFile(null);
+        setPlantUmlData(null);
       }
     }
   };
@@ -109,6 +111,8 @@ export default function UMLFileView() {
     if (e.target.files && e.target.files[0]) {
       handleFile(e.target.files[0]);
     }
+
+    e.target.value = "";
   };
 
   const handleProceed = () => {
