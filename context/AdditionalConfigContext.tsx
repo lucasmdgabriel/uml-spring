@@ -16,7 +16,9 @@ export function AdditionalProjectConfigProvider({ children }: { children: React.
         database: 'MYSQL',
         databaseUser: '',
         databasePassword: '',
-        databaseName: ''
+        databaseName: '',
+        auth: 'yes',
+        secretKey: ''
     });
 
     return (

@@ -25,6 +25,8 @@ export interface AdditionalConfigProps {
   databaseName: string,
   databaseUser: string,
   databasePassword: string
+  auth: string,
+  secretKey: string
 }
 
 export default function Home() {

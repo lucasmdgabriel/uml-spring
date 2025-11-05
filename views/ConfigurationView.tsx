@@ -107,6 +107,40 @@ export default function ConfigurationView() {
                         />
 
                     </div>
+                    
+                    <div className="flex flex-col gap-6 mb-8">
+                        <Selector
+                            name = "Autenticação"
+                            items = {[
+                                ["Sim", "yes"],
+                                ["Não", "no"]
+                            ]}
+                            clickedItem={additionalProjectConfig.auth}
+                            setClickedItem={(newValue: string) => {
+                                setAdditionalProjectConfig({
+                                    ... additionalProjectConfig,
+                                    auth: newValue
+                                })
+                            }}
+                        />
+
+                        { additionalProjectConfig.auth == "yes" &&
+                            <LabeledInput
+                                name="Chave Secreta"
+                                placeHolder="minha_chave"
+                                message="Use uma chave complexa e a proteja. Com uma chave fraca ou desprotegida, seu projeto publicado fica exposto."
+                                value={additionalProjectConfig.databaseName}
+                                error={""}
+                                changeValue={(newValue: string) => {
+                                    setAdditionalProjectConfig({
+                                        ... additionalProjectConfig,
+                                        databaseName: newValue
+                                    })
+                                }}
+                            />
+
+                        }
+                    </div>
                 </main>
 
             </div>
