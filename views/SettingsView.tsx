@@ -30,7 +30,7 @@ const nextPage: Record<string, string> = {
     no: "/generation"
 }
 
-export default function ConfigurationView() {
+export default function SettingsView() {
     const { additionalProjectConfig, setAdditionalProjectConfig } = useAdditionalProjectContext();
     const router = useRouter();
 

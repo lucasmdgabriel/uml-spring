@@ -119,13 +119,13 @@ export default function UMLFileView() {
   const handleProceed = () => {
     if (plantUmlData && !error) {
       console.log("Prosseguindo para /database-config");
-      router.push("/database-config");
+      router.push("/settings");
     } else {
       if (!error) {
         setError("Por favor, envie um arquivo válido primeiro.");
       }
       console.error("Não é possível prosseguir. Erro:", error || "Dados não carregados.");
-    }
+    }''
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
