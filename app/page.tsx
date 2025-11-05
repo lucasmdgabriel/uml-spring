@@ -1,7 +1,10 @@
 "use client"
 
+import ConfigurationView from "@/views/ConfigurationView";
 import SetupView from "../views/SetupView";
 import { useState } from "react";
+import DependenciesView from "@/views/DependenciesView";
+import UMLFileView from "@/views/UMLFileView";
 
 export interface ProjectConfigProps {
   type: string,
@@ -16,8 +19,13 @@ export interface ProjectConfigProps {
   packageName: string,
 }
 
+export interface AdditionalConfigProps {
+  structureType: string,
+  database: string
+}
+
 export default function Home() {
   return (
-    <SetupView/>
+    <ConfigurationView/>
   );
 }

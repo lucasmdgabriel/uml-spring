@@ -21,7 +21,7 @@ export function ProjectConfigProvider({ children }: { children: React.ReactNode 
         artifactId: '',
         name: '',
         description: '',
-        packageName: ''
+        packageName: '',
     });
 
     return (

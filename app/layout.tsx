@@ -4,6 +4,7 @@ import "./globals.css";
 import { ProjectConfigProvider } from "../context/ProjectConfigContext";
 import { DependenciesProvider } from "@/context/DependenciesContext";
 import { PlantUMLProvider } from "@/context/PlantUMLContext";
+import { AdditionalProjectConfigProvider } from "@/context/AdditionalConfigContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
         <ProjectConfigProvider>
           <DependenciesProvider>
             <PlantUMLProvider>
-              {children}
+              <AdditionalProjectConfigProvider>
+                {children}
+              </AdditionalProjectConfigProvider>
             </PlantUMLProvider>
           </DependenciesProvider>
         </ProjectConfigProvider>
