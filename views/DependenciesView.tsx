@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 export default function DependenciesView() {
   const { dependencies, setDependencies } = useDependenciesContext();
-  const { projectConfig, setProjectConfig } = useProjectContext();
   const router = useRouter();
 
   function changeDependencyClicked(i: number, j: number) {
