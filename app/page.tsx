@@ -1,6 +1,6 @@
 "use client"
 
-import ConfigurationView from "@/views/ConfigurationView";
+import ConfigurationView from "@/views/SettingsView";
 import SetupView from "../views/SetupView";
 import { useState } from "react";
 import DependenciesView from "@/views/DependenciesView";

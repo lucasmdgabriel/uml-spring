@@ -1,9 +1,14 @@
-import CommentedInput from "@/components/LabeledInput";
+"use client"
+
 import Header from "@/components/Header";
-import Input from "@/components/Input";
 import Selector from "@/components/Selector";
 import { useAdditionalProjectContext } from "@/context/AdditionalConfigContext";
 import LabeledInput from "@/components/LabeledInput";
+import Button from "@/components/Button";
+import { useRouter } from "next/navigation";
+import { AdditionalConfigProps } from "@/app/page";
+import { useState } from "react";
+import { validateLocalForm } from "@/app/hooks/SettingsHooks";
 
 const dbDatabaseMap: Record<string, string> = {
     MYSQL: "MySQL",
@@ -15,17 +20,42 @@ const dbUserDefault: Record<string, string> = {
     POSTGRESQL: 'O usuário padrão do PostgreSQL é postgres.'
 }
 
-
 const dbPasswordDefault: Record<string, string> = {
     MYSQL: "A senha padrão do MySQL é vazia.",
     POSTGRESQL: "Você forneceu uma senha para o PostgreSQL no momento da instalação."
 }
 
+const nextPage: Record<string, string> = {
+    yes: "/security",
+    no: "/generation"
+}
+
 export default function ConfigurationView() {
     const { additionalProjectConfig, setAdditionalProjectConfig } = useAdditionalProjectContext();
+    const router = useRouter();
+
+    const [errorForm, setErrorForm] = useState<AdditionalConfigProps>({
+        structureType: "",
+        database: "",
+        databaseName: "",
+        databaseUser: "",
+        databasePassword: "",
+        auth: "",
+        secretKey: ""
+    });
+
+    function handleClickProceed() {
+        const result = validateLocalForm(additionalProjectConfig);
+
+        if (result.isValid) {
+            router.push(nextPage[additionalProjectConfig.auth]);
+        }
+
+        setErrorForm(result.errorForm);
+    }
 
     return (
-        <div className="w-full h-screen flex justify-center">
+        <div className="w-full min-h-screen flex justify-center">
             <div className="w-[90%] max-w-[1000px] flex flex-col gap-[48px] h-full pt-[40px] pb-[40px] box-border">
                 <Header
                     title = "Configuração do Projeto"
@@ -67,9 +97,9 @@ export default function ConfigurationView() {
                         <LabeledInput
                             name="Nome do Banco de Dados"
                             placeHolder="meu_projeto_db"
-                            message={`No ${dbDatabaseMap[additionalProjectConfig.databaseName]}, você deve criar um banco de dados com o nome indicado.`}
+                            message={`No ${dbDatabaseMap[additionalProjectConfig.database]}, você deve criar um banco de dados com o nome indicado.`}
                             value={additionalProjectConfig.databaseName}
-                            error={""}
+                            error={errorForm.databaseName}
                             changeValue={(newValue: string) => {
                                 setAdditionalProjectConfig({
                                     ... additionalProjectConfig,
@@ -79,11 +109,11 @@ export default function ConfigurationView() {
                         />
 
                         <LabeledInput
-                            name={"Usuário do "+dbDatabaseMap[additionalProjectConfig.databaseUser]}
+                            name={"Usuário do "+dbDatabaseMap[additionalProjectConfig.database]}
                             placeHolder="meu_usuario"
                             message={dbUserDefault[additionalProjectConfig.database]}
                             value={additionalProjectConfig.databaseUser}
-                            error={""}
+                            error={errorForm.databaseUser}
                             changeValue={(newValue: string) => {
                                 setAdditionalProjectConfig({
                                     ... additionalProjectConfig,
@@ -98,7 +128,7 @@ export default function ConfigurationView() {
                             message={dbPasswordDefault[additionalProjectConfig.database]}
                             value={additionalProjectConfig.databasePassword}
                             password={true}
-                            error={""}
+                            error={errorForm.databasePassword}
                             changeValue={(newValue: string) => {
                                 setAdditionalProjectConfig({
                                     ... additionalProjectConfig,
@@ -109,7 +139,7 @@ export default function ConfigurationView() {
 
                     </div>
                     
-                    <div className="flex flex-col gap-6 mb-8">
+                    <div className="flex flex-col gap-6">
                         <Selector
                             name = "Autenticação"
                             items = {[
@@ -129,9 +159,12 @@ export default function ConfigurationView() {
                             <LabeledInput
                                 name="Chave Secreta"
                                 placeHolder="minha_chave"
-                                message="Use uma chave complexa e a proteja. Com uma chave fraca ou desprotegida, seu projeto publicado fica exposto."
+                                message="
+                                    Você pode usar qualquer texto como senha, mas o ideal é que tenha no mínimo 16 caracteres.
+                                    Além disso, é necessário protegê-la para tokens JWT não serem forjados.
+                                "
                                 value={additionalProjectConfig.secretKey}
-                                error={""}
+                                error={errorForm.secretKey}
                                 changeValue={(newValue: string) => {
                                     setAdditionalProjectConfig({
                                         ... additionalProjectConfig,
@@ -143,6 +176,26 @@ export default function ConfigurationView() {
                         }
                     </div>
                 </main>
+
+                <footer className="flex flex-row justify-end gap-[12px] w-full bg-white flex-shrink-0">
+                    <Button
+                    name="Voltar"
+                    color="#000"
+                    bg="#FFFFFF"
+                    borderColor="#D1D5DB"
+                    onClick={() => {
+                        router.push('/diagram');
+                    }}
+                    />
+        
+                    <Button
+                    name="Prosseguir"
+                    color="#FFFF"
+                    bg="#2563EB"
+                    borderColor="#2563EB"
+                    onClick={handleClickProceed}
+                    />
+                </footer>
 
             </div>
         </div>

@@ -20,7 +20,7 @@ export default function LabeledInput(props: InputProps) {
                 onChange={(e) => props.changeValue(e.target.value)}
             />
             <a className="text-[12px]">{props.message}</a>
-            <a className="pl-1 text-[#ff0000] font-bold text-[16px]">{props.error}</a>
+            <a className="text-[#ff0000] font-bold text-[16px]">{props.error}</a>
         </div>
     )
 }
