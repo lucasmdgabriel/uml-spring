@@ -21,7 +21,10 @@ export interface ProjectConfigProps {
 
 export interface AdditionalConfigProps {
   structureType: string,
-  database: string
+  database: string,
+  databaseName: string,
+  databaseUser: string,
+  databasePassword: string
 }
 
 export default function Home() {

@@ -1,6 +1,25 @@
+import CommentedInput from "@/components/LabeledInput";
 import Header from "@/components/Header";
+import Input from "@/components/Input";
 import Selector from "@/components/Selector";
 import { useAdditionalProjectContext } from "@/context/AdditionalConfigContext";
+import LabeledInput from "@/components/LabeledInput";
+
+const dbDatabaseMap: Record<string, string> = {
+    MYSQL: "MySQL",
+    POSTGRESQL: "PostgreSQL"
+}
+
+const dbUserDefault: Record<string, string> = {
+    MYSQL: 'O usuário padrão do MySQL é root.',
+    POSTGRESQL: 'O usuário padrão do PostgreSQL é postgres.'
+}
+
+
+const dbPasswordDefault: Record<string, string> = {
+    MYSQL: "A senha padrão do MySQL é vazia.",
+    POSTGRESQL: "Você forneceu uma senha para o PostgreSQL no momento da instalação."
+}
 
 export default function ConfigurationView() {
     const { additionalProjectConfig, setAdditionalProjectConfig } = useAdditionalProjectContext();
@@ -29,20 +48,65 @@ export default function ConfigurationView() {
                         }}
                     />
                     
-                    <Selector
-                        name = "Banco de Dados"
-                        items = {[
-                            ["MySQL", "MYSQL"],
-                            ["PostgreSQL", "POSTGRESQL"]
-                        ]}
-                        clickedItem={additionalProjectConfig.database}
-                        setClickedItem={(newValue: string) => {
-                            setAdditionalProjectConfig({
-                                ... additionalProjectConfig,
-                                database: newValue
-                            })
-                        }}
-                    />
+                    <div className="flex flex-col gap-6">
+                        <Selector
+                            name = "Banco de Dados"
+                            items = {[
+                                ["MySQL", "MYSQL"],
+                                ["PostgreSQL", "POSTGRESQL"]
+                            ]}
+                            clickedItem={additionalProjectConfig.database}
+                            setClickedItem={(newValue: string) => {
+                                setAdditionalProjectConfig({
+                                    ... additionalProjectConfig,
+                                    database: newValue
+                                })
+                            }}
+                        />
+
+                        <LabeledInput
+                            name="Nome do Banco de Dados"
+                            placeHolder="meu_projeto_db"
+                            message={`No ${dbDatabaseMap[additionalProjectConfig.database]}, você deve criar um banco de dados com o nome indicado.`}
+                            value={additionalProjectConfig.databaseName}
+                            error={""}
+                            changeValue={(newValue: string) => {
+                                setAdditionalProjectConfig({
+                                    ... additionalProjectConfig,
+                                    databaseName: newValue
+                                })
+                            }}
+                        />
+
+                        <LabeledInput
+                            name={"Usuário do "+dbDatabaseMap[additionalProjectConfig.database]}
+                            placeHolder="meu_usuario"
+                            message={dbUserDefault[additionalProjectConfig.database]}
+                            value={additionalProjectConfig.databaseName}
+                            error={""}
+                            changeValue={(newValue: string) => {
+                                setAdditionalProjectConfig({
+                                    ... additionalProjectConfig,
+                                    databaseName: newValue
+                                })
+                            }}
+                        />
+
+                        <LabeledInput
+                            name={"Senha do "+dbDatabaseMap[additionalProjectConfig.database]}
+                            placeHolder="minha_senha"
+                            message={dbPasswordDefault[additionalProjectConfig.database]}
+                            value={additionalProjectConfig.databaseName}
+                            error={""}
+                            changeValue={(newValue: string) => {
+                                setAdditionalProjectConfig({
+                                    ... additionalProjectConfig,
+                                    databaseName: newValue
+                                })
+                            }}
+                        />
+
+                    </div>
                 </main>
 
             </div>

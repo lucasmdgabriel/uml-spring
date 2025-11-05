@@ -13,7 +13,10 @@ const AdditionalProjectContext = createContext<ProjectContextType | null>(null);
 export function AdditionalProjectConfigProvider({ children }: { children: React.ReactNode }) {
     const [additionalProjectConfig, setAdditionalProjectConfig] = useState<AdditionalConfigProps>({
         structureType: 'LAYER',
-        database: 'MYSQL'
+        database: 'MYSQL',
+        databaseUser: '',
+        databasePassword: '',
+        databaseName: ''
     });
 
     return (
