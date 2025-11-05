@@ -67,7 +67,7 @@ export default function ConfigurationView() {
                         <LabeledInput
                             name="Nome do Banco de Dados"
                             placeHolder="meu_projeto_db"
-                            message={`No ${dbDatabaseMap[additionalProjectConfig.database]}, você deve criar um banco de dados com o nome indicado.`}
+                            message={`No ${dbDatabaseMap[additionalProjectConfig.databaseName]}, você deve criar um banco de dados com o nome indicado.`}
                             value={additionalProjectConfig.databaseName}
                             error={""}
                             changeValue={(newValue: string) => {
@@ -79,15 +79,15 @@ export default function ConfigurationView() {
                         />
 
                         <LabeledInput
-                            name={"Usuário do "+dbDatabaseMap[additionalProjectConfig.database]}
+                            name={"Usuário do "+dbDatabaseMap[additionalProjectConfig.databaseUser]}
                             placeHolder="meu_usuario"
                             message={dbUserDefault[additionalProjectConfig.database]}
-                            value={additionalProjectConfig.databaseName}
+                            value={additionalProjectConfig.databaseUser}
                             error={""}
                             changeValue={(newValue: string) => {
                                 setAdditionalProjectConfig({
                                     ... additionalProjectConfig,
-                                    databaseName: newValue
+                                    databaseUser: newValue
                                 })
                             }}
                         />
@@ -96,12 +96,13 @@ export default function ConfigurationView() {
                             name={"Senha do "+dbDatabaseMap[additionalProjectConfig.database]}
                             placeHolder="minha_senha"
                             message={dbPasswordDefault[additionalProjectConfig.database]}
-                            value={additionalProjectConfig.databaseName}
+                            value={additionalProjectConfig.databasePassword}
+                            password={true}
                             error={""}
                             changeValue={(newValue: string) => {
                                 setAdditionalProjectConfig({
                                     ... additionalProjectConfig,
-                                    databaseName: newValue
+                                    databasePassword: newValue
                                 })
                             }}
                         />
@@ -129,12 +130,12 @@ export default function ConfigurationView() {
                                 name="Chave Secreta"
                                 placeHolder="minha_chave"
                                 message="Use uma chave complexa e a proteja. Com uma chave fraca ou desprotegida, seu projeto publicado fica exposto."
-                                value={additionalProjectConfig.databaseName}
+                                value={additionalProjectConfig.secretKey}
                                 error={""}
                                 changeValue={(newValue: string) => {
                                     setAdditionalProjectConfig({
                                         ... additionalProjectConfig,
-                                        databaseName: newValue
+                                        secretKey: newValue
                                     })
                                 }}
                             />

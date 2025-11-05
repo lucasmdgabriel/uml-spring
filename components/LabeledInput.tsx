@@ -4,7 +4,8 @@ interface InputProps {
     placeHolder: string,
     value: string,
     error: string,
-    changeValue: (newValue: string) => void
+    changeValue: (newValue: string) => void,
+    password?: boolean
 }
 
 export default function LabeledInput(props: InputProps) {
@@ -14,6 +15,7 @@ export default function LabeledInput(props: InputProps) {
             <input
                 value={props.value}
                 placeholder={props.placeHolder}
+                type={props.password ? "password": "text"}
                 className="h-[40px] font-[16px] pl-[13px] bg-[#F5F7F8] border border-[#CBD5E1] rounded-[12px]"
                 onChange={(e) => props.changeValue(e.target.value)}
             />
