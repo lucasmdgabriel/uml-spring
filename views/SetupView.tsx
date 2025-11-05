@@ -6,6 +6,7 @@ import { useProjectContext } from "../context/ProjectConfigContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { metadataRequest } from "@/app/hooks/SetupHooks";
+import Header from "@/components/Header";
 
 type ErrorFormType = {
     groupId: string;
@@ -134,10 +135,8 @@ export default function SetupView() {
     return (
         <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4">
             <div className="max-w-[1000px] flex flex-col gap-[48px]">
-                <header className="flex flex-col">
-                    <a className="font-bold text-[30px]">Configuração Inicial</a>
-                    <a className="text-[16px]">Selecione as principais configurações do projeto</a>
-                </header>
+                <Header title="Configuração Inicial" description="Selecione as principais configurações do projeto."/>
+
                 <main className="flex flex-col gap-[40px]">
                     <Selector
                         name="Projeto"

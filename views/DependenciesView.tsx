@@ -2,6 +2,7 @@
 
 import { projectGenerate } from "@/app/services/projectsService";
 import Button from "@/components/Button";
+import Header from "@/components/Header";
 import { useDependenciesContext } from "@/context/DependenciesContext";
 import { useProjectContext } from "@/context/ProjectConfigContext";
 import { useRouter } from "next/navigation";
@@ -27,21 +28,15 @@ export default function DependenciesView() {
   }
 
   return (
-    // 1. DIV EXTERNO: Define a altura da tela, sem padding.
     <div className="w-full h-screen flex justify-center">
       
-      {/* 2. DIV INTERNO: Ocupa 100% da altura, é flex-col e controla os paddings. */}
       <div className="w-[90%] max-w-[1000px] flex flex-col gap-[48px] h-full pt-[40px] pb-[40px] box-border">
         
-        {/* 3. HEADER: Não deve encolher. */}
-        <header className="flex flex-col flex-shrink-0">
-          <a className="font-bold text-[30px]">Adicionar Dependências</a>
-          <a className="text-[16px]">
-            Selecione as dependências que você quer adicionar ao projeto.
-          </a>
-        </header>
+        <Header
+          title="Adicionar Dependências"
+          description="Selecione as dependências que você quer adicionar ao projeto."
+        />
 
-        {/* 4. MAIN: Deve crescer e rolar internamente. */}
         <main className="flex flex-col gap-8 flex-grow overflow-y-auto">
           {dependencies.map((dependencyCategory, i) => {
             return (
@@ -85,7 +80,6 @@ export default function DependenciesView() {
           })}
         </main>
 
-        {/* 5. FOOTER: Não deve encolher e não precisa mais das divs extras. */}
         <footer className="flex flex-row justify-end gap-[12px] w-full bg-white flex-shrink-0">
           <Button
             name="Voltar"

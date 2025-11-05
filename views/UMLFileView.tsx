@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { usePlantUMLContext } from "@/context/PlantUMLContext";
 import { databaseUrl } from "@/app/utils/databaseUrl";
+import Header from "@/components/Header";
 
 interface Variable {
   visibility: string;
@@ -141,12 +142,10 @@ export default function UMLFileView() {
   return (
     <div className="w-full h-screen flex justify-center pt-[40px] pb-[80px]">
       <div className="w-[90%] max-w-[1000px] flex flex-col gap-[48px]">
-        <header className="flex flex-col">
-          <a className="font-bold text-[30px]">Enviar Diagrama UML</a>
-          <a className="text-[16px]">
-            Envie o documento PlantUML para converter.
-          </a>
-        </header>
+        <Header
+          title="Enviar Diagrama UML"
+          description="Envie o documento PlantUML para converter."
+        />
 
         <div className="flex flex-col gap-[32px]">
           <div
