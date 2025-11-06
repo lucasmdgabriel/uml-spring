@@ -32,6 +32,6 @@ export interface AdditionalConfigProps {
 
 export default function Home() {
   return (
-    <SecurityView/>
+    <SetupView/>
   );
 }

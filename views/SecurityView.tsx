@@ -1,8 +1,11 @@
+"use client"
+
 import { pluralizeWord } from "@/app/hooks/Pluralize";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import { usePlantUMLContext } from "@/context/PlantUMLContext";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface RoleColorType {
@@ -27,19 +30,13 @@ interface SecurityType {
 export default function SecurityView() {
     const { plantUmlData, setPlantUmlData } = usePlantUMLContext();
 
+    const router = useRouter();
+
     const [security, setSecurity] = useState<SecurityType>({
         "roles": [],
         "securityRouters": []
     });
 
-    const fakeEntities = {
-        entities: [
-            {name: "borussia"},
-            {name: "barcelona"},
-            {name: "milan"}
-        ]
-    }
-    
     const roleColors: RoleColorType[] = [
         {color: "#1E40AF", bgColor: "#DBEAFE"},
         {color: "#166534", bgColor: "#DCFCE7"},
@@ -58,7 +55,7 @@ export default function SecurityView() {
     const [securityRolesActive, setSecurityRolesActive] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
-        if (fakeEntities == null || fakeEntities.entities == null)
+        if (plantUmlData == null || plantUmlData.entities == null)
             return;
 
         let newSecurity: SecurityType = {
@@ -66,8 +63,8 @@ export default function SecurityView() {
             "securityRouters": []
         };
 
-        for (let i = 0; i < fakeEntities.entities.length; i++) {
-            const newRole = fakeEntities.entities[i].name;
+        for (let i = 0; i < plantUmlData.entities.length; i++) {
+            const newRole = plantUmlData.entities[i].name;
 
             newSecurity.roles = [
                 ... newSecurity.roles,
@@ -135,14 +132,14 @@ export default function SecurityView() {
 
     return (
         <div className="w-full min-h-screen bg-[#F9FAFB] flex justify-center pt-[40px] px-4 pb-4">
-            <main className="max-w-[1000px] bg-white flex h-fit border border-[#E5E7EB] p-4 pb-8 flex-col gap-[48px]">
+            <div className="max-w-[1000px] bg-white flex h-fit border border-[#E5E7EB] p-4 pb-8 flex-col gap-[48px]">
                 <Header
                     title="Segurança de Endpoints"
                     description="Defina suas funções (roles) e, em seguida, adicione-as ou remova-as de cada permissão de endpoint."
                 />
 
-                <div className="flex justify-between flex-wrap gap-[16px]">
-                    <div className="flex gap-2 flex-wrap">
+                <main className="flex justify-between flex-wrap gap-[16px]">
+                    <div className="flex gap-2 flex-wrap items-start">
                         {
                             roles.map((item, index) => {
                                 return (
@@ -187,14 +184,14 @@ export default function SecurityView() {
                                 addRole(newRoleName);
                             }}/>
                     </div>
-                </div>
+                </main>
 
                 {
                     security.securityRouters.map((securityRouter, index) => {
                         return (
                             <div key={index} className="w-full flex flex-col items-center">
                                 <div className="w-full bg-[#F9FAFB] border border-[#E5E7EB] px-6 py-4 flex flex-col">
-                                    <a className="text-[#111827] font-bold text-lg">{fakeEntities.entities[index].name}</a>
+                                    <a className="text-[#111827] font-bold text-lg">{plantUmlData?.entities[index].name}</a>
                                     <a className="text-[#6B7280] text-sm">{securityRouter.url}</a>
                                 </div>
 
@@ -303,7 +300,34 @@ export default function SecurityView() {
                         )
                     })
                 }
-            </main>
+
+                <footer className="flex flex-row justify-center gap-[12px] w-full bg-white flex-shrink-0">
+                    <Button
+                        name="Voltar"
+                        color="#000"
+                        bg="#FFFFFF"
+                        borderColor="#D1D5DB"
+                        px="px-[32px]"
+                        py="py-[10px]"
+                        onClick={() => {
+                            router.back();
+                        }}
+                    />
+
+                    
+                    <Button
+                        name="Prosseguir"
+                        color="#FFFF"
+                        bg="#2563EB"
+                        borderColor="#2563EB"
+                        onClick={() => {
+                            router.push("/generation");
+                        }}
+                    />
+                </footer>
+            </div>
+
+            
         </div>
     )
 }
