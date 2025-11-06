@@ -46,8 +46,8 @@ export default function SecurityView() {
     }
 
     return (
-        <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4">
-            <div className="max-w-[1000px] flex flex-col gap-[48px]">
+        <div className="w-full min-h-screen bg-[#F9FAFB] flex justify-center pt-[40px] px-4 pb-4">
+            <div className="max-w-[1000px] bg-white flex h-fit border border-[#E5E7EB] p-4 pb-8 flex-col gap-[48px]">
                 <Header
                     title="Segurança de Endpoints"
                     description="Defina suas funções (roles) e, em seguida, adicione-as ou remova-as de cada permissão de endpoint."
