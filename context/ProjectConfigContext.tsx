@@ -14,7 +14,7 @@ export function ProjectConfigProvider({ children }: { children: React.ReactNode 
     const [projectConfig, setProjectConfig] = useState<ProjectConfigProps>({
         type: 'MAVEN_PROJECT',
         language: 'JAVA',
-        bootVersion: '4.0.0.BUILD-SNAPSHOT',
+        bootVersion: '3.5.7',
         packaging: 'JAR',
         javaVersion: '21',
         groupId: '',

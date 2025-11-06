@@ -171,12 +171,8 @@ export default function SetupView() {
                     <Selector
                         name="Versão Spring Boot"
                         items={[
-                            ["4.0.0 (SNAPSHOT)", "4.0.0.BUILD-SNAPSHOT"],
-                            ["4.0.0 (M3)", "4.0.0.M3"],
-                            ["3.5.7 (SNAPSHOT)", "3.5.7.BUILD-SNAPSHOT"],
-                            ["3.5.6", "3.5.6.RELEASE"],
-                            ["3.4.11 (SNAPSHOT)", "3.4.11.BUILD-SNAPSHOT"],
-                            ["3.4.10", "3.4.10.RELEASE"],
+                            ["3.5.7", "3.5.7"],
+                            ["3.5.6", "3.5.6"],
                         ]}
                         clickedItem={projectConfig.bootVersion}
                         setClickedItem={(newValue: string) => {

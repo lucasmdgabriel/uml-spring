@@ -20,6 +20,7 @@ export default function GenerationView() {
     const { plantUmlData, setPlantUmlData } = usePlantUMLContext();
 
     const [file, setFile] = useState<Uint8Array | null>(null);
+    const [error, setError] = useState(false);
 
     const [seconds, setSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(true);
@@ -61,6 +62,8 @@ export default function GenerationView() {
             }
         }
 
+        console.log(data);
+
         const url = databaseUrl+"/api/v1/projects";
 
         fetch(url, {
@@ -70,18 +73,25 @@ export default function GenerationView() {
             },
             body: JSON.stringify(data)
         })
-        .then(res => res.arrayBuffer())
+        .then(async (res) => {
+            setIsRunning(false);
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Erro na requisição: ${res.status} - ${errorText}`);
+            }
+            
+            return res.arrayBuffer();
+
+        })
         .then(buffer => {
             const uint8 = new Uint8Array(buffer);
             setFile(uint8);
         })
         .catch((error) => {
-            console.log("erro");
+            setError(true);
             console.log(error);
         })
-        
-        console.log(data);
-
     }, [])
 
     useEffect(() => {
@@ -99,12 +109,6 @@ export default function GenerationView() {
         const s = (secs % 60).toString().padStart(2, "0");
         return `${m}:${s}`;
     };
-
-    function downloadFile() {
-
-    }
-
-    
 
     return (
         <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4 bg-[#F9FAFB]">
@@ -149,9 +153,28 @@ export default function GenerationView() {
                             <div className="flex gap-1">
                                 <span className="text-[#4ADE80]">[INFO]</span>
                                 <span className="text-white">
-                                    {`${file == null ? `O projeto está sendo gerado: ${formatTime(seconds)}.`: "O projeto foi gerado."}`}
+                                    O projeto está sendo gerado: {formatTime(seconds)}.
                                 </span>
                             </div>
+
+                            { error &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#c71408]">[ERRO]</span>
+                                    <span className="text-white">
+                                        Erro na geração do arquivo, contacte o suporte.
+                                    </span>
+                                </div>
+                            }
+
+                            { file != null &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#4ADE80]">[INFO]</span>
+                                    <span className="text-white">
+                                        Projeto gerado com sucesso em: {formatTime(seconds)}.
+                                    </span>
+                                </div>
+                            }
+                            
                         </div>
                     </div>
 
@@ -177,7 +200,7 @@ export default function GenerationView() {
                             px="px-[32px]"
                             py="py-[10px]"
                             onClick={() => {
-                                handleFileDownload(file, "nome_teste.zip")
+                                handleFileDownload(file, projectConfig.name+".zip")
                             }}
                             />
                         }
