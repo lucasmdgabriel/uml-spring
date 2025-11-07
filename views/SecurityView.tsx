@@ -1,10 +1,12 @@
 "use client"
 
 import { pluralizeWord } from "@/app/hooks/Pluralize";
+import { convertSecurityData } from "@/app/hooks/SecurityHooks";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import { usePlantUMLContext } from "@/context/PlantUMLContext";
+import { SecurityType, useSecurityContext } from "@/context/SecurityContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,29 +15,13 @@ interface RoleColorType {
     bgColor: string,
 }
 
-interface RouteType {
-    "url": string,
-    "get": string[],
-    "post": string[],
-    "getAll": string[],
-    "put": string[],
-    "delete": string[]
-}
-
-interface SecurityType {
-    "roles": string[],
-    "securityRouters": RouteType[]
-}
+export const securityMethods = ["create", "read", "update", "delete", "list"];
 
 export default function SecurityView() {
+    const { securityConfig, setSecurityConfig } = useSecurityContext();
     const { plantUmlData, setPlantUmlData } = usePlantUMLContext();
 
     const router = useRouter();
-
-    const [security, setSecurity] = useState<SecurityType>({
-        "roles": [],
-        "securityRouters": []
-    });
 
     const roleColors: RoleColorType[] = [
         {color: "#1E40AF", bgColor: "#DBEAFE"},
@@ -43,7 +29,6 @@ export default function SecurityView() {
         {color: "#6B21A8", bgColor: "#F3E8FF"}
     ]
 
-    const methods = ["create", "read", "update", "delete", "list"];
 
     const [newRoleName, setNewRoleName] = useState("");
     const [newRoleNameError, setNewRoleNameError] = useState("");
@@ -84,7 +69,7 @@ export default function SecurityView() {
             ];
         }
 
-        setSecurity(newSecurity);
+        setSecurityConfig(newSecurity);
 
         console.log(newSecurity);
     }, []);
@@ -187,7 +172,7 @@ export default function SecurityView() {
                 </main>
 
                 {
-                    security.securityRouters.map((securityRouter, index) => {
+                    securityConfig.securityRouters.map((securityRouter, index) => {
                         return (
                             <div key={index} className="w-full flex flex-col items-center">
                                 <div className="w-full bg-[#F9FAFB] border border-[#E5E7EB] px-6 py-4 flex flex-col">
@@ -196,7 +181,7 @@ export default function SecurityView() {
                                 </div>
 
                                 {
-                                    methods.map((method, indexMethod) => {
+                                    securityMethods.map((method, indexMethod) => {
                                         return (
                                             <div key={indexMethod} className="w-full border border-[#E5E7EB] px-6 py-4 flex justify-between">
                                                 <a className="text-[#111827] font-bold text-sm">{method.toUpperCase()}</a>
@@ -321,6 +306,7 @@ export default function SecurityView() {
                         bg="#2563EB"
                         borderColor="#2563EB"
                         onClick={() => {
+                            setSecurityConfig(convertSecurityData(roles, securityConfig, securityRolesActive));
                             router.push("/generation");
                         }}
                     />

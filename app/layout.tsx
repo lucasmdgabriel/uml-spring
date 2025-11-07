@@ -5,6 +5,7 @@ import { ProjectConfigProvider } from "../context/ProjectConfigContext";
 import { DependenciesProvider } from "@/context/DependenciesContext";
 import { PlantUMLProvider } from "@/context/PlantUMLContext";
 import { AdditionalProjectConfigProvider } from "@/context/AdditionalConfigContext";
+import { SecurityConfigProvider } from "@/context/SecurityContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,9 @@ export default function RootLayout({
           <DependenciesProvider>
             <PlantUMLProvider>
               <AdditionalProjectConfigProvider>
-                {children}
+                <SecurityConfigProvider>
+                  {children}
+                </SecurityConfigProvider>
               </AdditionalProjectConfigProvider>
             </PlantUMLProvider>
           </DependenciesProvider>

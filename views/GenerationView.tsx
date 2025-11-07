@@ -8,16 +8,18 @@ import { useAdditionalProjectContext } from "@/context/AdditionalConfigContext";
 import { useDependenciesContext } from "@/context/DependenciesContext";
 import { usePlantUMLContext } from "@/context/PlantUMLContext";
 import { useProjectContext } from "@/context/ProjectConfigContext";
+import { useSecurityContext } from "@/context/SecurityContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function GenerationView() {
     const router = useRouter();
 
-    const { projectConfig, setProjectConfig } = useProjectContext();
-    const { dependencies, setDependencies } = useDependenciesContext();
-    const { additionalProjectConfig, setAdditionalProjectConfig } = useAdditionalProjectContext();
-    const { plantUmlData, setPlantUmlData } = usePlantUMLContext();
+    const { projectConfig } = useProjectContext();
+    const { dependencies } = useDependenciesContext();
+    const { additionalProjectConfig } = useAdditionalProjectContext();
+    const { plantUmlData } = usePlantUMLContext();
+    const { securityConfig } = useSecurityContext();
 
     const [file, setFile] = useState<Uint8Array | null>(null);
     const [error, setError] = useState(false);
@@ -57,8 +59,7 @@ export default function GenerationView() {
                 ...plantUmlData
             },
             "securityRequest": {
-                "roles": [],
-                "securityRouters": [] 
+                ... securityConfig
             }
         }
 
