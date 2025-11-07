@@ -182,7 +182,7 @@ export default function SecurityView() {
                                         py="py-[4px]"
                                         borderRadius={8}
                                         onClick={() => {
-                                            
+                                            setRoles(prev => prev.filter((_, i) => i !== index));
                                         }}/>
                                     )
                             })
