@@ -8,7 +8,7 @@ import Input from "@/components/Input";
 import { usePlantUMLContext } from "@/context/PlantUMLContext";
 import { SecurityType, useSecurityContext } from "@/context/SecurityContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface RoleColorType {
     color: string,
@@ -29,6 +29,7 @@ export default function SecurityView() {
         {color: "#6B21A8", bgColor: "#F3E8FF"}
     ]
 
+    const ran = useRef(false);
 
     const [newRoleName, setNewRoleName] = useState("");
     const [newRoleNameError, setNewRoleNameError] = useState("");
@@ -40,6 +41,17 @@ export default function SecurityView() {
     const [securityRolesActive, setSecurityRolesActive] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
+        if (ran.current)
+            return;
+        ran.current = true;
+
+        if (securityConfig.roles.length > 0) {
+            for (const role of securityConfig.roles) {
+                addRole(role);
+            }
+            return;
+        }
+
         if (plantUmlData == null || plantUmlData.entities == null)
             return;
 
@@ -99,20 +111,25 @@ export default function SecurityView() {
 
         setNewRoleNameError("");
 
-        setRoles([
-            ... roles,
+        setNewRoleIndex(prev => {
+            const colorIndex = prev % roleColors.length;
+
+            setRolesData(prevData => ({
+                ...prevData,
+                [newRoleName]: {
+                    ...roleColors[colorIndex]
+                }
+            }));
+
+            return prev + 1;
+        });
+
+        setRoles(prev => [
+            ...prev,
             newRoleName
         ]);
 
-        setRolesData({
-            ... rolesData,
-            [newRoleName]: {
-                ... roleColors[newRoleIndex % roleColors.length]
-            }
-        });
-
         setNewRoleName("");
-        setNewRoleIndex(newRoleIndex + 1);
     }
 
     return (
