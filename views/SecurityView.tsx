@@ -49,6 +49,7 @@ export default function SecurityView() {
             for (const role of securityConfig.roles) {
                 addRole(role);
             }
+            updateSecurityRolesActive();
             return;
         }
 
@@ -71,7 +72,7 @@ export default function SecurityView() {
             newSecurity.securityRouters = [
                 ... newSecurity.securityRouters,
                 {
-                    "url": "/api/"+pluralizeWord(newRole),
+                    "url": "/api/"+pluralizeWord(newRole).toLowerCase(),
                     "get": [],
                     "post": [],
                     "delete": [],
@@ -86,7 +87,33 @@ export default function SecurityView() {
         console.log(newSecurity);
     }, []);
 
+    function updateSecurityRolesActive() {
+        for (const securityRoute of securityConfig.securityRouters) {
+            const url = securityRoute.url;
+            for (const method of securityMethods) {
+                let roles: string[] = [];
 
+                if (method == "create")
+                    roles = securityRoute.post;
+                else if (method == "read")
+                    roles = securityRoute.get;
+                else if (method == "update")
+                    roles = securityRoute.put;
+                else if (method == "delete")
+                    roles = securityRoute.delete;
+                else if (method == "list")
+                    roles = securityRoute.getAll;
+
+                for (const role of roles) {
+                    setSecurityRolesActive(prev => ({
+                        ...prev,
+                        [url + method + role]: true
+                    }));
+
+                }
+            }
+        }
+    }
 
     function addRole(newRoleName: string) {
         if (newRoleName == "") {
