@@ -232,50 +232,12 @@ export default function SecurityView() {
 
                                                 <div className="flex gap-2 flex-wrap">
                                                     {
-                                                        !securityRolesActive[securityRouter.url+method+"permitAll"] ?
-                                                        <Button
-                                                            name={"Sem autenticação"}
-                                                            color={"#fff"}
-                                                            bg={"#969696"}
-                                                            borderColor={""}
-                                                            px="px-[9px]"
-                                                            py="py-[4px]"
-                                                            borderRadius={8}
-                                                            onClick={() => {
-                                                                setSecurityRolesActive({
-                                                                    ... securityRolesActive,
-                                                                    [securityRouter.url+method+"permitAll"]: true
-                                                                })
-                                                            }
-                                                        }/>
-                                                        
-                                                        :
-
-                                                        <Button
-                                                            name={"Sem autenticação"}
-                                                            color={"#fff"}
-                                                            bg={"#aa0000"}
-                                                            borderColor={""}
-                                                            px="px-[9px]"
-                                                            py="py-[4px]"
-                                                            borderRadius={8}
-                                                            onClick={() => {
-                                                                setSecurityRolesActive({
-                                                                    ... securityRolesActive,
-                                                                    [securityRouter.url+method+"permitAll"]: false
-                                                                })
-                                                            }
-                                                        }/>
-                                                    }
-                                                        
-                                                    {
                                                     
                                                     roles.map((role, indexRole) => {
                                                         return (
                                                             <div key={indexRole} className="flex flex-1">
                                                                 {
-                                                                    !securityRolesActive[securityRouter.url+method+role]
-                                                                    || securityRolesActive[securityRouter.url+method+"permitAll"] == true ?
+                                                                    !securityRolesActive[securityRouter.url+method+role] ?
                                                                     <Button
                                                                         name={role}
                                                                         color={"#fff"}
