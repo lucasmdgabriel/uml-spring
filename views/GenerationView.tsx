@@ -22,10 +22,9 @@ export default function GenerationView() {
     const { securityConfig } = useSecurityContext();
 
     const [file, setFile] = useState<Uint8Array | null>(null);
+    const [postmanFile, setPostmanFile] = useState<Uint8Array | null>(null);
     const [error, setError] = useState(false);
-
-    const [seconds, setSeconds] = useState(0);
-    const [isRunning, setIsRunning] = useState(true);
+    const [errorPostman, setErrorPostman] = useState(false);
 
     useEffect(() => {
         let dependenciesList: string[] = [];
@@ -63,8 +62,6 @@ export default function GenerationView() {
             }
         }
 
-        console.log(data);
-
         const url = databaseUrl+"/api/v1/projects";
 
         fetch(url, {
@@ -75,8 +72,6 @@ export default function GenerationView() {
             body: JSON.stringify(data)
         })
         .then(async (res) => {
-            setIsRunning(false);
-
             if (!res.ok) {
                 const errorText = await res.text();
                 throw new Error(`Erro na requisição: ${res.status} - ${errorText}`);
@@ -96,20 +91,43 @@ export default function GenerationView() {
     }, [])
 
     useEffect(() => {
-        if (!isRunning) return;
+        const url = databaseUrl + "/api/v1/tests/postman";
 
-        const interval = setInterval(() => {
-            setSeconds(prev => prev + 1);
-        }, 1000);
+        const data = {
+            "name": projectConfig.artifactId,
+            "entityModel": plantUmlData
+        };
 
-        return () => clearInterval(interval);
-    }, [isRunning]);
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(async (res) => {
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Erro na requisição: ${res.status} - ${errorText}`);
+            }
+            
+            return res.json(); 
 
-    const formatTime = (secs: number) => {
-        const m = Math.floor(secs / 60).toString().padStart(2, "0");
-        const s = (secs % 60).toString().padStart(2, "0");
-        return `${m}:${s}`;
-    };
+        })
+        .then(jsonData => {
+            
+            const jsonString = JSON.stringify(jsonData, null, 2); 
+
+            const encoder = new TextEncoder();
+
+            const uint8 = encoder.encode(jsonString);
+
+            setPostmanFile(uint8);
+        })
+        .catch((error) => {
+            setErrorPostman(true);
+            console.log(error);
+        });
+
+    }, []);
 
     return (
         <div className="w-full min-h-screen flex justify-center pt-[40px] px-4 pb-4 bg-[#F9FAFB]">
@@ -134,8 +152,8 @@ export default function GenerationView() {
                             <a className="text-[#111827]">✅ Repositories</a>
                             <a className="text-[#111827]">✅ Services</a>
                             <a className="text-[#111827]">✅ Controllers</a>
-                            <a className="text-[#111827]">❌ Autenticação</a>
-                            <a className="text-[#111827]">❌ Security</a>
+                            <a className="text-[#111827]">{additionalProjectConfig.auth == "yes" ? "✅": "❌"} Autenticação</a>
+                            <a className="text-[#111827]">{additionalProjectConfig.auth == "yes" ? "✅": "❌"} Security</a>
                         </div>
                     </div>
 
@@ -145,16 +163,20 @@ export default function GenerationView() {
                             <a className="text-[#6B7280]">Feedback da geração</a>
                         </div>
 
-                        <div className="bg-[#1F2937] rounded-sm p-2 flex flex-col gap-1 flex-1">
-                            <div className="flex gap-1">
-                                <span className="text-[#4ADE80]">[INFO]</span>
-                                <span className="text-white">O usuário optou por não gerar arquivos de autenticação.</span>
-                            </div>
+                        <div className="min-w-[450px] max-w-[40%] bg-[#1F2937] rounded-sm p-2 flex flex-col gap-1 flex-1">
+                            { additionalProjectConfig.auth != "yes" &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#4ADE80]">[INFO]</span>
+                                    <span className="text-white">O usuário optou por não gerar arquivos de autenticação.</span>
+                                </div>
+
+                            }
+                            
 
                             <div className="flex gap-1">
                                 <span className="text-[#4ADE80]">[INFO]</span>
                                 <span className="text-white">
-                                    O projeto está sendo gerado: {formatTime(seconds)}.
+                                    O projeto está sendo gerado.
                                 </span>
                             </div>
 
@@ -162,7 +184,7 @@ export default function GenerationView() {
                                 <div className="flex gap-1">
                                     <span className="text-[#c71408]">[ERRO]</span>
                                     <span className="text-white">
-                                        Erro na geração do arquivo, contacte o suporte.
+                                        Erro na geração do arquivo. Contacte o suporte.
                                     </span>
                                 </div>
                             }
@@ -171,7 +193,37 @@ export default function GenerationView() {
                                 <div className="flex gap-1">
                                     <span className="text-[#4ADE80]">[INFO]</span>
                                     <span className="text-white">
-                                        Projeto gerado com sucesso em: {formatTime(seconds)}.
+                                        Projeto gerado com sucesso.
+                                    </span>
+                                </div> 
+                                
+                            }
+
+                            { file != null &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#4ADE80]">[INFO]</span>
+                                    <span className="text-white">
+                                        Arquivos de teste estão sendo gerados.
+                                    </span>
+                                </div>
+                            }
+
+                            
+
+                            { postmanFile != null &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#4ADE80]">[INFO]</span>
+                                    <span className="text-white">
+                                        Arquivos de teste gerados com sucesso.
+                                    </span>
+                                </div>
+                            }
+
+                            { errorPostman &&
+                                <div className="flex gap-1">
+                                    <span className="text-[#c71408]">[ERRO]</span>
+                                    <span className="text-white">
+                                        Erro na geração do arquivo de teste. Contacte o suporte.
                                     </span>
                                 </div>
                             }
@@ -202,6 +254,20 @@ export default function GenerationView() {
                             py="py-[10px]"
                             onClick={() => {
                                 handleFileDownload(file, projectConfig.name+".zip")
+                            }}
+                            />
+                        }
+
+                        { postmanFile != null &&
+                            <Button
+                            name="Baixar Testes (.zip)"
+                            color="#FFFF"
+                            bg="#2563EB"
+                            borderColor="#2563EB"
+                            px="px-[32px]"
+                            py="py-[10px]"
+                            onClick={() => {
+                                handleFileDownload(postmanFile, projectConfig.artifactId+" - Postman.json")
                             }}
                             />
                         }
