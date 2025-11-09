@@ -51,7 +51,7 @@ export default function GenerationView() {
                 "databaseUser": additionalProjectConfig.databaseUser,
                 "databasePassword": additionalProjectConfig.databasePassword,
                 "structureType": additionalProjectConfig.structureType,
-                "auth": additionalProjectConfig.auth == "yes" ? true: false,
+                "auth": additionalProjectConfig.auth == "yes",
                 "secretKey": additionalProjectConfig.secretKey,
             },
             "plantUml": {
@@ -95,7 +95,8 @@ export default function GenerationView() {
 
         const data = {
             "name": projectConfig.artifactId,
-            "entityModel": plantUmlData
+            "entityModel": plantUmlData,
+            "auth": additionalProjectConfig.auth == "yes"
         };
 
         fetch(url, {
