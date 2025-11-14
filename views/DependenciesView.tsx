@@ -1,6 +1,5 @@
 "use client";
 
-import { projectGenerate } from "@/app/services/projectsService";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import { useDependenciesContext } from "@/context/DependenciesContext";
