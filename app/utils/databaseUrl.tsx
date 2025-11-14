@@ -1,1 +1,1 @@
-export const databaseUrl = "http://localhost:8080";
+export const databaseUrl = process.env.NEXT_PUBLIC_API_URL;

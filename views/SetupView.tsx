@@ -1,3 +1,5 @@
+"use client"
+
 import Selector from "../components/Selector";
 import Input from "../components/Input";
 import { ProjectConfigProps } from "../app/page";
