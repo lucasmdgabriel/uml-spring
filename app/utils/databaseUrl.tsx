@@ -1,1 +1,1 @@
-export const databaseUrl = process.env.NEXT_PUBLIC_API_URL;
+export const databaseUrl = process.env.NEXT_PUBLIC_API_URL || "/api/proxy";
